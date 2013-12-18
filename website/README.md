@@ -1,1 +1,0 @@
-Northing/Easting to Latitude/Longitude conversion is done using Chris Veness' JavaScript libraries available [here](http://www.movable-type.co.uk/scripts/latlong-gridref.html).
