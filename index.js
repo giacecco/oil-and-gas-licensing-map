@@ -10,10 +10,7 @@ var	/* These are the approximated boundaries of the original map in the
 		HEIGHT: 910000
 	};
 
-var map,
-	ajaxRequest,
-	plotlist,
-	plotlayers = [ ];
+var map;
 
 var makeGeoJSON = function (dataFile, callback) {
 	d3.csv("data.csv", function (data) {
@@ -25,16 +22,15 @@ var makeGeoJSON = function (dataFile, callback) {
 		_.each(data, function (square) {
 			var latLon = [ 
 				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting), northing: parseFloat(square.northing) }),
-				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + parseFloat(square.width), northing: parseFloat(square.northing) }),
-				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + parseFloat(square.width), northing: parseFloat(square.northing) - parseFloat(square.height) }),
-				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting), northing: parseFloat(square.northing) - parseFloat(square.height) }),
+				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + 10000, northing: parseFloat(square.northing) }),
+				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + 10000, northing: parseFloat(square.northing) - 10000 }),
+				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting), northing: parseFloat(square.northing) - 10000 }),
 			];
 			geoJSON.features.push({
 				type: "Feature",
 				id: (++featureCount).toString(),
 				properties: {
-					name: "Alabama",
-					density: 94.65,
+					license: square.license,
 				},
 				geometry: {
 					type: "Polygon",
@@ -52,6 +48,31 @@ var makeGeoJSON = function (dataFile, callback) {
 	});
 };
 
+var getLicenceColour = function (value) {
+	// Same colours as the original map
+	var colour = "#EEFCED";
+	switch (value) {
+		case "under consideration":
+			colour = "#7999D0";
+			break;
+		case "existing":
+			colour = "#FFFCBF";
+			break;
+	}
+	return colour;
+}
+
+var style = function (feature) {
+    return {
+        fillColor: getLicenceColour(feature.properties.license),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
 // Derived from example at http://switch2osm.org/using-tiles/getting-started-with-leaflet/
 var initMap = function () {
 	makeGeoJSON("data.csv", function (err, data) {
@@ -62,9 +83,9 @@ var initMap = function () {
 		var osmAttrib='Map data © OpenStreetMap contributors';
 		var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
 		// start the map in South-East England
-		map.setView(new L.LatLng(55, 0.6), 6);
+		map.setView(new L.LatLng(56.2, -3.0), 7);
 		map.addLayer(osm);
-		L.geoJson(data).addTo(map);
+		L.geoJson(data, {style: style}).addTo(map);
 	});
 }
 
