@@ -83,7 +83,7 @@ var initMap = function () {
 		var osmAttrib='Map data © OpenStreetMap contributors';
 		var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
 		// start the map in South-East England
-		map.setView(new L.LatLng(56.2, -3.0), 7);
+		map.setView(new L.LatLng(55.6, -3.0), 7);
 		map.addLayer(osm);
 		L.geoJson(data, {style: style}).addTo(map);
 	});
