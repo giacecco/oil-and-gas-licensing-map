@@ -1,0 +1,3 @@
+This folder is a copy of the documents set that makes the UK Department of Energy and Climate Change (DECC)'s report for further onshore oil and gas licensing. The report is the base for a consultation that is ongoing at the moment of writing and due for completion on 28/3/2014.
+
+The original documents are available from the UK Government's website at [https://www.gov.uk/government/consultations/environmental-report-for-further-onshore-oil-and-gas-licensing](https://www.gov.uk/government/consultations/environmental-report-for-further-onshore-oil-and-gas-licensing).
