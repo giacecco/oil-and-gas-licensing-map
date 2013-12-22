@@ -22,9 +22,9 @@ var makeGeoJSON = function (dataFile, callback) {
 		_.each(data, function (square) {
 			var latLon = [ 
 				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting), northing: parseFloat(square.northing) }),
-				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + 10000, northing: parseFloat(square.northing) }),
-				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + 10000, northing: parseFloat(square.northing) - 10000 }),
-				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting), northing: parseFloat(square.northing) - 10000 }),
+				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + parseFloat(square.width), northing: parseFloat(square.northing) }),
+				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + parseFloat(square.width), northing: parseFloat(square.northing) - parseFloat(square.height) }),
+				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting), northing: parseFloat(square.northing) - parseFloat(square.height) }),
 			];
 			geoJSON.features.push({
 				type: "Feature",
