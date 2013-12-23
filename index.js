@@ -13,7 +13,7 @@ var	/* These are the approximated boundaries of the original map in the
 var map;
 
 var makeGeoJSON = function (dataFile, callback) {
-	d3.csv("data.csv", function (data) {
+	d3.csv(dataFile, function (data) {
 		var featureCount = 0,
 			geoJSON = {
 				type: "FeatureCollection",
@@ -28,7 +28,8 @@ var makeGeoJSON = function (dataFile, callback) {
 			];
 			geoJSON.features.push({
 				type: "Feature",
-				id: (++featureCount).toString(),
+				// TODO: is defining an id of any use? 
+				// id: (++featureCount).toString(),
 				properties: {
 					license: square.license,
 				},
@@ -75,17 +76,20 @@ var style = function (feature) {
 
 // Derived from example at http://switch2osm.org/using-tiles/getting-started-with-leaflet/
 var initMap = function () {
-	makeGeoJSON("data.csv", function (err, data) {
-		// set up the map
-		map = new L.Map('map');
-		// create the tile layer with correct attribution
-		var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-		var osmAttrib='Map data © OpenStreetMap contributors';
-		var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
-		// start the map in South-East England
-		map.setView(new L.LatLng(55.6, -3.0), 7);
-		map.addLayer(osm);
-		L.geoJson(data, {style: style}).addTo(map);
+	d3.json("existingLicences.json", function(existingLicences) {
+		makeGeoJSON("areasUnderConsideration.csv", function (err, areasUnderConsideration) {
+			// set up the map
+			map = new L.Map('map');
+			// create the tile layer with correct attribution
+			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+			var osmAttrib='Map data © OpenStreetMap contributors';
+			var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
+			// start the map in South-East England
+			map.setView(new L.LatLng(55.6, -3.0), 7);
+			map.addLayer(osm);
+			L.geoJson(areasUnderConsideration, {style: style}).addTo(map);
+			L.geoJson(existingLicences, {style: style}).addTo(map);
+		});
 	});
 }
 
