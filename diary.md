@@ -6,6 +6,8 @@ I find out thanks to [an article in the Guardian]http://www.theguardian.com/envi
 
 I start developing a prototype based on 'reversing engineering' the information I see in the PDF files as apparently there is no machine-readable data I can use.
 
+![Screenshot](https://raw.github.com/giacecco/fracking-map/master/images/screenshot1.png)
+
 # 23 December 2013
 
 Thanks to an exchange with DECC [on Twitter](https://twitter.com/giacecco/status/415106011976839168) I find out that plenty of the data beyond the report is actually available at [https://www.gov.uk/oil-and-gas-onshore-maps-and-gis-shapefiles](https://www.gov.uk/oil-and-gas-onshore-maps-and-gis-shapefiles).
