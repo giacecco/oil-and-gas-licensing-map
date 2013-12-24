@@ -34,3 +34,10 @@ Wow this is amazing. A command like the one below:
 takes a GIS shapefile with shapes expressed in National Grid coordinates (OSGB36, the "EPSG" in the command) and converts it straight away in a GeoJSON in latitude/longitude coordinates (WGS84, the "4326" in the command). I found the hunch [here](http://stackoverflow.com/a/1541575/1218376)).
 
 Now I need to test the sample file by putting it on top of an UK map and see if it matches what I know it is supposed to look like.
+
+# 24 December 2013
+
+Started yesterday night in bed writing the scripts that automate downloading the source DECC files and prepare them for the website, starting from the already existing licences. It already looks good on the map.
+
+![Early rendering on the map of the original DECC data](https://raw.github.com/giacecco/fracking-map/master/images/screenshot2.png)
+
