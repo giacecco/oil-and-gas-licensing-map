@@ -12,7 +12,8 @@ var	/* These are the approximated boundaries of the original map in the
 
 var configuration,
 	map,
-	geoJSON;
+	geoJSON,
+	info;
 
 var makeGeoJSON = function (dataFile, callback) {
 	d3.csv(dataFile, function (data) {
@@ -62,22 +63,27 @@ var highlightFeature = function (e) {
     if (!L.Browser.ie && !L.Browser.opera) {
         layer.bringToFront();
     }
+    info.update(layer.feature.properties);
 }
 
 var resetHighlight = function (e) {
     geoJSON.resetStyle(e.target);
+    info.update();
+}
+
+function zoomToFeature(e) {
+    map.fitBounds(e.target.getBounds());
 }
 
 var onEachFeature = function (feature, layer) {
 	layer.on({
 		mouseover: highlightFeature,
 		mouseout: resetHighlight,
-		// click: zoomToFeature
+		click: zoomToFeature
 	});
 }
 
 var getLicenceColour = function (value) {
-	// Same colours as the original map
 	var colour = "#EEFCED";
 	switch (value) {
 		case "area under consideration":
@@ -145,17 +151,23 @@ var initMap = function () {
 			map.addLayer(osm);
 
 			// set up the 'info control'
-			var info = L.control();
+			info = L.control();
 			info.onAdd = function (map) {
 			    this._div = L.DomUtil.create('div', 'info'); 
 			    this.update();
 			    return this._div;
 			};
 			// method that we will use to update the control based on feature properties passed
-			info.update = function (props) {
-			    this._div.innerHTML = '<h4>Licensing status</h4>' +  (props ?
-			        '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
-			        : 'Hover over the map');
+			info.update = function (properties) {
+				if (properties) {
+				    this._div.innerHTML = 
+				    	'<h4>Licensing status</h4>' + 
+						_.map(properties, function (memo, propertyName) {
+							return "<b>" + propertyName + "</b><br />" + properties[propertyName];
+						}).join('<br />');
+			    } else {
+			    	this._div.innerHTML = '<h4>Licensing status</h4>Hover over the map' 
+			    }
 			};
 			info.addTo(map);
 
