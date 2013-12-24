@@ -1,0 +1,40 @@
+{
+  "name": "fracking-map-preprocessing",
+  "version": "0.0.1",
+  "author": "Gianfranco Cecconi <gianfranco.cecconi@digitalcontraptionsimaginarium.co.uk>",
+  "description": "[TO DO]",
+  "author": {
+    "name": "Gianfranco Cecconi",
+    "email": "gianfranco.cecconi@digitalcontraptionsimaginarium.co.uk",
+    "url": "http://www.digitalcontraptionsimaginarium.co.uk"
+  },
+  "contributors": [ 
+    {
+      "name": "Gianfranco Cecconi",
+      "email": "gianfranco.cecconi@digitalcontraptionsimaginarium.co.uk"
+    } 
+  ],
+  "homepage": "https://github.com/giacecco/fracking-map",
+  "repository": { 
+    "type": "git", 
+    "url": "git://github.com/giacecco/fracking-map.git"
+  },
+  "bugs": { 
+    "url": "https://github.com/giacecco/fracking-map/issues" 
+  },
+  "keywords": [
+    "fracking", "shale", "gas",
+    "DECC", "licence", "licensing"
+  ],
+  "dependencies" : {
+    "adm-zip": ">=0.4.3",
+    "async": ">=0.2.9",
+    "optimist": ">=0.6.0",
+    "request": ">=2.30.0",
+    "underscore": ">=1.5.2"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10.24"
+  }
+}
