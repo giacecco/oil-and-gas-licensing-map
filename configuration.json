@@ -3,38 +3,17 @@
 		"Existing licences": {
 			"dataFile": "existingLicences.json",
 			"dataType": "geojson",
-			"style": {
-				"fillColor": "red",
-				"weight": 2,
-				"opacity": 1,
-				"color": "white",
-				"dashArray": "3",
-				"fillOpacity": 0.7
-    		}	
+			"licenseStatus": "existing"
 		},
 		"December 2013 offering": {
 			"dataFile": "dec2013Offering.json",
 			"dataType": "geojson",
-			"style": {
-				"fillColor": "orange",
-				"weight": 2,
-				"opacity": 1,
-				"color": "white",
-				"dashArray": "3",
-				"fillOpacity": 0.7
-    		}
+			"licenseStatus": "2013 offering"
 		},
 		"Areas under consideration": {
 			"dataFile": "areasUnderConsideration.csv",
 			"dataType": "csv",
-			"style": {
-				"fillColor": "yellow",
-				"weight": 2,
-				"opacity": 1,
-				"color": "white",
-				"dashArray": "3",
-				"fillOpacity": 0.7
-    		}
+			"licenseStatus": "area under consideration"
 		}
 	}
 }

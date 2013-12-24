@@ -10,7 +10,9 @@ var	/* These are the approximated boundaries of the original map in the
 		HEIGHT: 910000
 	};
 
-var map;
+var configuration,
+	map,
+	geoJSON;
 
 var makeGeoJSON = function (dataFile, callback) {
 	d3.csv(dataFile, function (data) {
@@ -49,16 +51,43 @@ var makeGeoJSON = function (dataFile, callback) {
 	});
 };
 
-/*
+var highlightFeature = function (e) {
+    var layer = e.target;
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+    if (!L.Browser.ie && !L.Browser.opera) {
+        layer.bringToFront();
+    }
+}
+
+var resetHighlight = function (e) {
+    geoJSON.resetStyle(e.target);
+}
+
+var onEachFeature = function (feature, layer) {
+	layer.on({
+		mouseover: highlightFeature,
+		mouseout: resetHighlight,
+		// click: zoomToFeature
+	});
+}
+
 var getLicenceColour = function (value) {
 	// Same colours as the original map
 	var colour = "#EEFCED";
 	switch (value) {
-		case "under consideration":
-			colour = "#7999D0";
+		case "area under consideration":
+			colour = "yellow";
 			break;
 		case "existing":
-			colour = "#FFFCBF";
+			colour = "red";
+			break;
+		case "2013 offering":
+			colour = "orange";
 			break;
 	}
 	return colour;
@@ -66,7 +95,7 @@ var getLicenceColour = function (value) {
 
 var style = function (feature) {
     return {
-        fillColor: getLicenceColour(feature.properties.license),
+        fillColor: getLicenceColour(feature.properties.licenseStatus),
         weight: 2,
         opacity: 1,
         color: 'white',
@@ -74,23 +103,37 @@ var style = function (feature) {
         fillOpacity: 0.7
     };
 }
-*/
 
-// Derived from example at http://switch2osm.org/using-tiles/getting-started-with-leaflet/
 var initMap = function () {
-	var configuration; 
 	d3.json("configuration.json", function (c) { 
 		configuration = c;
-		async.each(_.keys(configuration.layers), function (layerName, callback) {
-			switch (configuration.layers[layerName].dataType) {
+		configuration.geoJSON = {
+			type: "FeatureCollection",
+			features: [ ]
+		};
+		async.each(_.values(configuration.layers), function (layer, callback) {
+			switch (layer.dataType) {
 				case "geojson":
-					d3.json(configuration.layers[layerName].dataFile, function(data) { configuration.layers[layerName].geoJSON = data; callback(null); });
+					d3.json(layer.dataFile, function(data) { 
+						configuration.geoJSON.features = configuration.geoJSON.features.concat(_.map(data.features, function (feature) {
+							feature.properties.licenseStatus = layer.licenseStatus;
+							return feature;
+						})); 
+						callback(null); 
+					});
 					break;
 				case "csv":
-					makeGeoJSON(configuration.layers[layerName].dataFile, function (err, data) { configuration.layers[layerName].geoJSON = data; callback(err); });
+					makeGeoJSON(layer.dataFile, function (err, data) { 
+						configuration.geoJSON.features = configuration.geoJSON.features.concat(_.map(data.features, function (feature) {
+							feature.properties.licenseStatus = layer.licenseStatus;
+							return feature;
+						})); 
+						callback(err); 
+					});
 					break;
 			}
 		}, function (err) {
+
 			// set up the map
 			map = new L.Map('map');
 			// create the tile layer with correct attribution
@@ -100,11 +143,37 @@ var initMap = function () {
 			// start the map in South-East England
 			map.setView(new L.LatLng(55.6, -3.0), 7);
 			map.addLayer(osm);
-			_.each(_.values(configuration.layers), function (l) {
-				L.geoJson(l.geoJSON, {style: function (feature) { return l.style; } }).addTo(map);
-			});
+
+			// set up the 'info control'
+			var info = L.control();
+			info.onAdd = function (map) {
+			    this._div = L.DomUtil.create('div', 'info'); 
+			    this.update();
+			    return this._div;
+			};
+			// method that we will use to update the control based on feature properties passed
+			info.update = function (props) {
+			    this._div.innerHTML = '<h4>Licensing status</h4>' +  (props ?
+			        '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
+			        : 'Hover over the map');
+			};
+			info.addTo(map);
+
+			// set up the legend
+			var legend = L.control({position: 'bottomright'});
+			legend.onAdd = function (map) {
+			    var div = L.DomUtil.create('div', 'info legend');
+			    div.innerHTML = "Hello, this will become the legend";
+		    	return div;
+			};
+			legend.addTo(map);
+
+			// set up the layers
+			geoJSON = L.geoJson(configuration.geoJSON, { 
+				style: style,
+				onEachFeature: onEachFeature
+			}).addTo(map);
+
 		});
 	});
 }
-
-//console.log(OsGridRef.osGridToLatLong({ easting: 450000, northing: 150000}));
