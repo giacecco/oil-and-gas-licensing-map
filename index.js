@@ -74,22 +74,45 @@ var style = function (feature) {
     };
 }
 
+var style2 = function (feature) {
+    return {
+        fillColor: getLicenceColour(feature.properties.license),
+        weight: 2,
+        opacity: 1,
+        color: 'red',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
 // Derived from example at http://switch2osm.org/using-tiles/getting-started-with-leaflet/
 var initMap = function () {
-	d3.json("existingLicences.json", function(existingLicences) {
-		makeGeoJSON("areasUnderConsideration.csv", function (err, areasUnderConsideration) {
-			// set up the map
-			map = new L.Map('map');
-			// create the tile layer with correct attribution
-			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-			var osmAttrib='Map data © OpenStreetMap contributors';
-			var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
-			// start the map in South-East England
-			map.setView(new L.LatLng(55.6, -3.0), 7);
-			map.addLayer(osm);
-			L.geoJson(areasUnderConsideration, {style: style}).addTo(map);
-			L.geoJson(existingLicences, {style: style}).addTo(map);
-		});
+	var existingLicences,
+		dec2013Offering,
+		areasUnderConsideration;
+	async.parallel([
+		function (callback) {
+			d3.json("existingLicences.json", function(data) { existingLicences = data; callback(null); });
+		},
+		function (callback) {
+			d3.json("dec2013Offering.json", function(data) { dec2013Offering = data; callback(null); });
+		},
+		function (callback) {
+			makeGeoJSON("areasUnderConsideration.csv", function (err, a) { areasUnderConsideration = a; callback(err); });
+		},		
+	], function (err) {
+		// set up the map
+		map = new L.Map('map');
+		// create the tile layer with correct attribution
+		var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		var osmAttrib='Map data © OpenStreetMap contributors';
+		var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
+		// start the map in South-East England
+		map.setView(new L.LatLng(55.6, -3.0), 7);
+		map.addLayer(osm);
+		L.geoJson(areasUnderConsideration, {style: style}).addTo(map);
+		L.geoJson(existingLicences, {style: style}).addTo(map);
+		L.geoJson(dec2013Offering, {style: style2}).addTo(map);
 	});
 }
 
