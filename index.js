@@ -11,7 +11,6 @@ var	/* These are the approximated boundaries of the original map in the
 	},
 	CONFIGURATION = {
 		"layers": {
-			/*
 			"Existing licences": {
 				"dataFile": "existingLicences.json",
 				"dataType": "geojson",
@@ -22,7 +21,6 @@ var	/* These are the approximated boundaries of the original map in the
 				"dataType": "geojson",
 				"licenseStatus": "2013 offering"
 			},
-			*/
 			"Areas under consideration": {
 				"dataFile": "areasUnderConsideration.csv",
 				"dataType": "csv",
