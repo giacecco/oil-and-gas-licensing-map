@@ -169,7 +169,7 @@ var initMap = function () {
 		var osmAttrib='Map data © OpenStreetMap contributors';
 		var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
 		// start the map in South-East England
-		map.setView(new L.LatLng(54.0, -3.0), 7);
+		map.setView(new L.LatLng(52.0, -3.0), 7);
 		map.addLayer(osm);
 
 		// set up the 'info control'
