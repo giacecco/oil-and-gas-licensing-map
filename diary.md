@@ -41,3 +41,9 @@ Started yesterday night in bed writing the scripts that automate downloading the
 
 ![Early rendering on the map of the original DECC data](https://raw.github.com/giacecco/fracking-map/master/images/screenshot2.png)
 
+# 25 December 2013
+
+Merry Christmas!
+
+Studying the shapefiles using QGIS I've realised that many of the '13th round of licence offering' matches pre-existing licensed areas. I need to decide what is the relevant information for my 'public'. Instinctively, when an area was already licensed and its licensing is being reviewed / re-offered, it is not really interesting to me, while I like seeing the newly added areas. With QGIS I can easily calculate the polygonal difference of one vs the others and create a new shapefile with that information. Is that really what is the most useful bit of information to show?
+
