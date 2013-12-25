@@ -52,35 +52,37 @@ var makeGeoJSON = function (dataFile, callback) {
 	});
 };
 
-var highlightFeature = function (e) {
-    var layer = e.target;
-    layer.setStyle({
-        weight: 5,
-        color: '#666',
-        dashArray: '',
-        fillOpacity: 0.7
-    });
-    if (!L.Browser.ie && !L.Browser.opera) {
-        layer.bringToFront();
-    }
-    info.update(layer.feature.properties);
-}
-
-var resetHighlight = function (e) {
-    geoJSON.resetStyle(e.target);
-    info.update();
-}
-
-function zoomToFeature(e) {
-    map.fitBounds(e.target.getBounds());
-}
-
 var onEachFeature = function (feature, layer) {
+
+	var highlightFeature = function (e) {
+	    var layer = e.target;
+	    layer.setStyle({
+	        weight: 5,
+	        color: '#666',
+	        dashArray: '',
+	        fillOpacity: 0.7
+	    });
+	    if (!L.Browser.ie && !L.Browser.opera) {
+	        layer.bringToFront();
+	    }
+	    info.update(layer.feature.properties);
+	}
+
+	var resetHighlight = function (e) {
+	    geoJSON.resetStyle(e.target);
+	    info.update();
+	}
+
+	var zoomToFeature = function (e) {
+	    map.fitBounds(e.target.getBounds());
+	}
+
 	layer.on({
 		mouseover: highlightFeature,
 		mouseout: resetHighlight,
 		click: zoomToFeature
 	});
+
 }
 
 var getLicenceColour = function (value) {
