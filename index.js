@@ -8,7 +8,28 @@ var	/* These are the approximated boundaries of the original map in the
 		NORTHING: 950000,
 		WIDTH: 710000, 
 		HEIGHT: 910000
-	};
+	},
+	CONFIGURATION = {
+		"layers": {
+			/*
+			"Existing licences": {
+				"dataFile": "existingLicences.json",
+				"dataType": "geojson",
+				"licenseStatus": "existing"
+			},
+			"December 2013 offering": {
+				"dataFile": "dec2013Offering.json",
+				"dataType": "geojson",
+				"licenseStatus": "2013 offering"
+			},
+			*/
+			"Areas under consideration": {
+				"dataFile": "areasUnderConsideration.csv",
+				"dataType": "csv",
+				"licenseStatus": "area under consideration"
+			}
+		}
+	};	
 
 var configuration,
 	map,
@@ -25,9 +46,9 @@ var makeGeoJSON = function (dataFile, callback) {
 		_.each(data, function (square) {
 			var latLon = [ 
 				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting), northing: parseFloat(square.northing) }),
-				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + parseFloat(square.width), northing: parseFloat(square.northing) }),
-				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + parseFloat(square.width), northing: parseFloat(square.northing) - parseFloat(square.height) }),
-				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting), northing: parseFloat(square.northing) - parseFloat(square.height) }),
+				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + 10000., northing: parseFloat(square.northing) }),
+				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting) + 10000., northing: parseFloat(square.northing) - 10000. }),
+				OsGridRef.osGridToLatLong({ easting: parseFloat(square.easting), northing: parseFloat(square.northing) - 10000. }),
 			];
 			geoJSON.features.push({
 				type: "Feature",
@@ -113,81 +134,79 @@ var style = function (feature) {
 }
 
 var initMap = function () {
-	d3.json("configuration.json", function (c) { 
-		configuration = c;
-		configuration.geoJSON = {
-			type: "FeatureCollection",
-			features: [ ]
+	configuration = CONFIGURATION;
+	configuration.geoJSON = {
+		type: "FeatureCollection",
+		features: [ ]
+	};
+	async.each(_.values(configuration.layers), function (layer, callback) {
+		switch (layer.dataType) {
+			case "geojson":
+				d3.json(layer.dataFile, function(data) { 
+					configuration.geoJSON.features = configuration.geoJSON.features.concat(_.map(data.features, function (feature) {
+						feature.properties.licenseStatus = layer.licenseStatus;
+						return feature;
+					})); 
+					callback(null); 
+				});
+				break;
+			case "csv":
+				makeGeoJSON(layer.dataFile, function (err, data) { 
+					configuration.geoJSON.features = configuration.geoJSON.features.concat(_.map(data.features, function (feature) {
+						feature.properties.licenseStatus = layer.licenseStatus;
+						return feature;
+					})); 
+					callback(err); 
+				});
+				break;
+		}
+	}, function (err) {
+
+		// set up the map
+		map = new L.Map('map');
+		// create the tile layer with correct attribution
+		var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		var osmAttrib='Map data © OpenStreetMap contributors';
+		var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
+		// start the map in South-East England
+		map.setView(new L.LatLng(55.6, -3.0), 7);
+		map.addLayer(osm);
+
+		// set up the 'info control'
+		info = L.control();
+		info.onAdd = function (map) {
+		    this._div = L.DomUtil.create('div', 'info'); 
+		    this.update();
+		    return this._div;
 		};
-		async.each(_.values(configuration.layers), function (layer, callback) {
-			switch (layer.dataType) {
-				case "geojson":
-					d3.json(layer.dataFile, function(data) { 
-						configuration.geoJSON.features = configuration.geoJSON.features.concat(_.map(data.features, function (feature) {
-							feature.properties.licenseStatus = layer.licenseStatus;
-							return feature;
-						})); 
-						callback(null); 
-					});
-					break;
-				case "csv":
-					makeGeoJSON(layer.dataFile, function (err, data) { 
-						configuration.geoJSON.features = configuration.geoJSON.features.concat(_.map(data.features, function (feature) {
-							feature.properties.licenseStatus = layer.licenseStatus;
-							return feature;
-						})); 
-						callback(err); 
-					});
-					break;
-			}
-		}, function (err) {
+		// method that we will use to update the control based on feature properties passed
+		info.update = function (properties) {
+			if (properties) {
+			    this._div.innerHTML = 
+			    	'<h4>Licensing status</h4>' + 
+					_.map(properties, function (memo, propertyName) {
+						return "<b>" + propertyName + "</b><br />" + properties[propertyName];
+					}).join('<br />');
+		    } else {
+		    	this._div.innerHTML = '<h4>Licensing status</h4>Hover over the map' 
+		    }
+		};
+		info.addTo(map);
 
-			// set up the map
-			map = new L.Map('map');
-			// create the tile layer with correct attribution
-			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-			var osmAttrib='Map data © OpenStreetMap contributors';
-			var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
-			// start the map in South-East England
-			map.setView(new L.LatLng(55.6, -3.0), 7);
-			map.addLayer(osm);
+		// set up the legend
+		var legend = L.control({position: 'bottomright'});
+		legend.onAdd = function (map) {
+		    var div = L.DomUtil.create('div', 'info legend');
+		    div.innerHTML = "Hello, this will become the legend";
+	    	return div;
+		};
+		legend.addTo(map);
 
-			// set up the 'info control'
-			info = L.control();
-			info.onAdd = function (map) {
-			    this._div = L.DomUtil.create('div', 'info'); 
-			    this.update();
-			    return this._div;
-			};
-			// method that we will use to update the control based on feature properties passed
-			info.update = function (properties) {
-				if (properties) {
-				    this._div.innerHTML = 
-				    	'<h4>Licensing status</h4>' + 
-						_.map(properties, function (memo, propertyName) {
-							return "<b>" + propertyName + "</b><br />" + properties[propertyName];
-						}).join('<br />');
-			    } else {
-			    	this._div.innerHTML = '<h4>Licensing status</h4>Hover over the map' 
-			    }
-			};
-			info.addTo(map);
+		// set up the layers
+		geoJSON = L.geoJson(configuration.geoJSON, { 
+			style: style,
+			onEachFeature: onEachFeature
+		}).addTo(map);
 
-			// set up the legend
-			var legend = L.control({position: 'bottomright'});
-			legend.onAdd = function (map) {
-			    var div = L.DomUtil.create('div', 'info legend');
-			    div.innerHTML = "Hello, this will become the legend";
-		    	return div;
-			};
-			legend.addTo(map);
-
-			// set up the layers
-			geoJSON = L.geoJson(configuration.geoJSON, { 
-				style: style,
-				onEachFeature: onEachFeature
-			}).addTo(map);
-
-		});
 	});
 }
