@@ -132,13 +132,16 @@ var initMap = function () {
 		// set up the map
 		map = new L.Map('map', {
 			layers: [ osm ].concat(_.values(layers)),	
+			// layers: [ osm, layers["Existing licences"] ],	
 			center: new L.LatLng(55.0, -3.0),	
 			zoom: 6,
 		});
 
 		// set up the 'layers control'
 		// TODO make the looks of this control consistent with the others, first attempt failed
-		L.control.layers(undefined, layers, { collapsed: false }).addTo(map);
+		// L.control.layers(undefined, layers, { collapsed: false }).addTo(map);
+		layersControl = L.control.layers(undefined, layers, { collapsed: false, autoZIndex: true });
+		layersControl.addTo(map);
 
 		// set up the 'info control'
 		infoControl = L.control();
