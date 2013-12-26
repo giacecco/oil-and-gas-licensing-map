@@ -1,39 +1,26 @@
-var	/* These are the approximated boundaries of the original map in the 
-	   "Strategic Environmental Assessment for Further Onshore Oil and Gas 
-	   Licensing" report, figure 'NTS 1'. No information is available beyond
-	   these boundaries, we need to presume that they are neither already 
-	   licensed nor under consideration. */
-	MAP_BOUNDARIES = {
-		EASTING: 50000,
-		NORTHING: 950000,
-		WIDTH: 710000, 
-		HEIGHT: 910000
-	},
-	CONFIGURATION = {
+var	CONFIGURATION = {
 		"layers": {
-			"Existing licences": {
-				"dataFile": "existingLicences.json",
-				"dataType": "geojson",
-				"licenseStatus": "existing"
+			// the order is relevant! from the bottom to the top one
+			"Areas under consideration": {
+				"dataFile": "areasUnderConsideration.csv",
+				"dataType": "csv",
 			},
 			"December 2013 offering": {
 				"dataFile": "dec2013Offering.json",
 				"dataType": "geojson",
-				"licenseStatus": "2013 offering"
 			},
-			"Areas under consideration": {
-				"dataFile": "areasUnderConsideration.csv",
-				"dataType": "csv",
-				"licenseStatus": "area under consideration"
-			}
+			"Existing licences": {
+				"dataFile": "existingLicences.json",
+				"dataType": "geojson",
+			},
 		}
 	};	
 
 var configuration,
-	map,
 	layers = { },
+	map,
 	layersControl,
-	info;
+	infoControl;
 
 var onEachFeature = function (feature, layer) {
 
@@ -43,18 +30,18 @@ var onEachFeature = function (feature, layer) {
 	        weight: 5,
 	        color: '#666',
 	        dashArray: '',
-	        fillOpacity: 0.7
+	        fillOpacity: 0.4
 	    });
 	    if (!L.Browser.ie && !L.Browser.opera) {
 	        layer.bringToFront();
 	    }
-	    info.update(layer.feature.properties);
+	    infoControl.update(layer.feature.properties);
 	}
 
 	var resetHighlight = function (e) {
 		// TODO is there a better way of doing this?
 	    _.each(layers, function (layer) { layer.resetStyle(e.target) });
-	    info.update();
+	    infoControl.update();
 	}
 
 	var zoomToFeature = function (e) {
@@ -64,21 +51,21 @@ var onEachFeature = function (feature, layer) {
 	layer.on({
 		mouseover: highlightFeature,
 		mouseout: resetHighlight,
-		click: zoomToFeature
+		click: zoomToFeature,
 	});
 
 }
 
-var getLicenceColour = function (value) {
+var getLicenceColour = function (licenceType) {
 	var colour = "#EEFCED";
-	switch (value) {
-		case "area under consideration":
+	switch (licenceType) {
+		case "Areas under consideration":
 			colour = "yellow";
 			break;
-		case "existing":
+		case "Existing licences":
 			colour = "red";
 			break;
-		case "2013 offering":
+		case "December 2013 offering":
 			colour = "orange";
 			break;
 	}
@@ -87,7 +74,7 @@ var getLicenceColour = function (value) {
 
 var style = function (feature) {
     return {
-        fillColor: getLicenceColour(feature.properties.licenseStatus),
+        fillColor: getLicenceColour(feature.properties.licenceType),
         weight: 2,
         opacity: 1,
         color: 'white',
@@ -103,12 +90,24 @@ var initMap = function () {
 			case "geojson":
 				d3.json(configuration.layers[layerName].dataFile, function(data) { 
 					configuration.layers[layerName].geoJSON = data;
+					configuration.layers[layerName].geoJSON.features = _.map(
+						configuration.layers[layerName].geoJSON.features, 
+						function (feature) {
+							feature.properties.licenceType = layerName;
+							return feature;
+						});
 					callback(null); 
 				});
 				break;
 			case "csv":
 				makeGeoJSON(configuration.layers[layerName].dataFile, function (err, data) { 
 					configuration.layers[layerName].geoJSON = data;
+					configuration.layers[layerName].geoJSON.features = _.map(
+						configuration.layers[layerName].geoJSON.features, 
+						function (feature) {
+							feature.properties.licenceType = layerName;
+							return feature;
+						});
 					callback(err); 
 				});
 				break;
@@ -123,8 +122,10 @@ var initMap = function () {
 		// set up the data layers
 		_.each(_.keys(configuration.layers), function (layerName) {
 			layers[layerName] = L.geoJson(configuration.layers[layerName].geoJSON, { 
-				style: style,
-				onEachFeature: onEachFeature
+				/* TODO I have tried defining styling functions in CONFIGURATION 
+				but then layer.resetStyle fails */
+				style: style, 
+				onEachFeature: onEachFeature,
 			});
 		});
 
@@ -140,14 +141,15 @@ var initMap = function () {
 		L.control.layers(undefined, layers, { collapsed: false }).addTo(map);
 
 		// set up the 'info control'
-		info = L.control();
-		info.onAdd = function (map) {
-		    this._div = L.DomUtil.create('div', 'info'); 
+		infoControl = L.control();
+		infoControl.onAdd = function (map) {
+		    this._div = L.DomUtil.create('div', 'infoControl'); 
 		    this.update();
 		    return this._div;
 		};
+
 		// method that we will use to update the control based on feature properties passed
-		info.update = function (properties) {
+		infoControl.update = function (properties) {
 			if (properties) {
 			    this._div.innerHTML = 
 			    	'<h4>Licensing status</h4>' + 
@@ -158,17 +160,7 @@ var initMap = function () {
 		    	this._div.innerHTML = '<h4>Licensing status</h4>Hover over the map' 
 		    }
 		};
-		info.addTo(map);
-
-		// set up the legend
-		var legend = L.control({position: 'bottomright'});
-		legend.onAdd = function (map) {
-		    var div = L.DomUtil.create('div', 'info legend');
-		    div.innerHTML = "Hello, this will become the legend";
-	    	return div;
-		};
-		legend.addTo(map);
-
+		infoControl.addTo(map);
 
 	});
 }
