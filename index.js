@@ -4,14 +4,17 @@ var	CONFIGURATION = {
 			"Areas under consideration": {
 				"dataFile": "areasUnderConsideration.csv",
 				"dataType": "csv",
+				"colour": "#FFFF66",
 			},
 			"December 2013 offering": {
 				"dataFile": "dec2013Offering.json",
 				"dataType": "geojson",
+				"colour": "orange",
 			},
 			"Existing licences": {
 				"dataFile": "existingLicences.json",
 				"dataType": "geojson",
+				"colour": "red",
 			},
 		}
 	};	
@@ -58,25 +61,9 @@ var onEachFeature = function (feature, layer) {
 
 }
 
-var getLicenceColour = function (licenceType) {
-	var colour = "#EEFCED";
-	switch (licenceType) {
-		case "Areas under consideration":
-			colour = "yellow";
-			break;
-		case "Existing licences":
-			colour = "red";
-			break;
-		case "December 2013 offering":
-			colour = "orange";
-			break;
-	}
-	return colour;
-}
-
 var style = function (feature) {
     return {
-        fillColor: getLicenceColour(feature.properties.licenceType),
+        fillColor: configuration.layers[feature.properties.licenceType].colour,
         weight: 2,
         opacity: 1,
         color: 'white',
@@ -140,10 +127,22 @@ var initMap = function () {
 			zoomControl: false,
 		});
 
+		titleControl = L.control({ position: 'topleft' });
+		titleControl.onAdd = function (map) {
+		    this._div = L.DomUtil.create('div', 'titleControl'); 
+		    this._div.innerHTML = "<h1>fracking-map</h1>This is work in progress. Please read <a href=\"https://github.com/giacecco/fracking-map\">here</a>.";
+		    return this._div;
+		};
+		titleControl.addTo(map);
+
 		// set up the 'layers control'
 		// TODO make the looks of this control consistent with the others, first attempt failed
 		// L.control.layers(undefined, layers, { collapsed: false }).addTo(map);
-		layersControl = L.control.layers(undefined, layers, { collapsed: false, autoZIndex: true });
+		var layersForControl = { };
+		_.each(_.keys(layers), function (layerName) {
+			layersForControl[layerName + " <div style='width:10px;height:10px;border:1px solid black;background-color:" + configuration.layers[layerName].colour + ";display:inline-block'></div>"] = layers[layerName];
+		});
+		layersControl = L.control.layers(undefined, layersForControl, { collapsed: false, position: 'topleft' });
 		layersControl.addTo(map);
 
 		// set up the 'info control'
@@ -167,15 +166,6 @@ var initMap = function () {
 		    }
 		};
 		infoControl.addTo(map);
-
-		// set up the 'info control'
-		titleControl = L.control({ position: 'topleft' });
-		titleControl.onAdd = function (map) {
-		    this._div = L.DomUtil.create('div', 'titleControl'); 
-		    this._div.innerHTML = "<h1>fracking-map</h1><h2>This is work in progress. Please read <a href=\"https://github.com/giacecco/fracking-map\">here</a>.</h2>";
-		    return this._div;
-		};
-		titleControl.addTo(map);
 
 		// explicitly adding the zoom control so that it is below the titleControl
 		zoomControl = L.control.zoom().addTo(map);
