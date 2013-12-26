@@ -31,7 +31,8 @@ var	/* These are the approximated boundaries of the original map in the
 
 var configuration,
 	map,
-	geoJSON,
+	layers = { },
+	layersControl,
 	info;
 
 var onEachFeature = function (feature, layer) {
@@ -51,7 +52,8 @@ var onEachFeature = function (feature, layer) {
 	}
 
 	var resetHighlight = function (e) {
-	    geoJSON.resetStyle(e.target);
+		// TODO is there a better way of doing this?
+	    _.each(layers, function (layer) { layer.resetStyle(e.target) });
 	    info.update();
 	}
 
@@ -96,42 +98,46 @@ var style = function (feature) {
 
 var initMap = function () {
 	configuration = CONFIGURATION;
-	configuration.geoJSON = {
-		type: "FeatureCollection",
-		features: [ ]
-	};
-	async.each(_.values(configuration.layers), function (layer, callback) {
-		switch (layer.dataType) {
+	async.each(_.keys(configuration.layers), function (layerName, callback) {
+		switch (configuration.layers[layerName].dataType) {
 			case "geojson":
-				d3.json(layer.dataFile, function(data) { 
-					configuration.geoJSON.features = configuration.geoJSON.features.concat(_.map(data.features, function (feature) {
-						feature.properties.licenseStatus = layer.licenseStatus;
-						return feature;
-					})); 
+				d3.json(configuration.layers[layerName].dataFile, function(data) { 
+					configuration.layers[layerName].geoJSON = data;
 					callback(null); 
 				});
 				break;
 			case "csv":
-				makeGeoJSON(layer.dataFile, function (err, data) { 
-					configuration.geoJSON.features = configuration.geoJSON.features.concat(_.map(data.features, function (feature) {
-						feature.properties.licenseStatus = layer.licenseStatus;
-						return feature;
-					})); 
+				makeGeoJSON(configuration.layers[layerName].dataFile, function (err, data) { 
+					configuration.layers[layerName].geoJSON = data;
 					callback(err); 
 				});
 				break;
 		}
 	}, function (err) {
 
-		// set up the map
-		map = new L.Map('map');
 		// create the tile layer with correct attribution
-		var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-		var osmAttrib='Map data © OpenStreetMap contributors';
-		var osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
-		// start the map in South-East England
-		map.setView(new L.LatLng(52.0, -3.0), 7);
-		map.addLayer(osm);
+		var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+			osmAttrib='Map data © OpenStreetMap contributors',
+			osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
+
+		// set up the data layers
+		_.each(_.keys(configuration.layers), function (layerName) {
+			layers[layerName] = L.geoJson(configuration.layers[layerName].geoJSON, { 
+				style: style,
+				onEachFeature: onEachFeature
+			});
+		});
+
+		// set up the map
+		map = new L.Map('map', {
+			layers: [ osm ].concat(_.values(layers)),	
+			center: new L.LatLng(55.0, -3.0),	
+			zoom: 6,
+		});
+
+		// set up the 'layers control'
+		// TODO make the looks of this control consistent with the others, first attempt failed
+		L.control.layers(undefined, layers, { collapsed: false }).addTo(map);
 
 		// set up the 'info control'
 		info = L.control();
@@ -163,11 +169,6 @@ var initMap = function () {
 		};
 		legend.addTo(map);
 
-		// set up the layers
-		geoJSON = L.geoJson(configuration.geoJSON, { 
-			style: style,
-			onEachFeature: onEachFeature
-		}).addTo(map);
 
 	});
 }
