@@ -140,7 +140,7 @@ var initMap = function () {
 		// L.control.layers(undefined, layers, { collapsed: false }).addTo(map);
 		var layersForControl = { };
 		_.each(_.keys(layers), function (layerName) {
-			layersForControl[layerName + " <div style='width:10px;height:10px;border:1px solid black;background-color:" + configuration.layers[layerName].colour + ";display:inline-block'></div>"] = layers[layerName];
+			layersForControl[layerName + "&nbsp;<div style='width:10px;height:10px;border:1px solid black;background-color:" + configuration.layers[layerName].colour + ";display:inline-block'></div>"] = layers[layerName];
 		});
 		layersControl = L.control.layers(undefined, layersForControl, { collapsed: false, position: 'topleft' });
 		layersControl.addTo(map);
