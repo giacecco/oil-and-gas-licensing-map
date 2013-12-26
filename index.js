@@ -20,7 +20,8 @@ var configuration,
 	layers = { },
 	map,
 	layersControl,
-	infoControl;
+	infoControl,
+	titleControl;
 
 var onEachFeature = function (feature, layer) {
 
@@ -164,6 +165,15 @@ var initMap = function () {
 		    }
 		};
 		infoControl.addTo(map);
+
+		// set up the 'info control'
+		titleControl = L.control({ position: 'topleft' });
+		titleControl.onAdd = function (map) {
+		    this._div = L.DomUtil.create('div', 'titleControl'); 
+		    this._div.innerHTML = "<h1>fracking-map</h1><h2>This is work in progress. Please read <a href=\"https://github.com/giacecco/fracking-map\">here</a>.</h2>";
+		    return this._div;
+		};
+		titleControl.addTo(map);
 
 	});
 }
