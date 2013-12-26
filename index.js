@@ -130,7 +130,7 @@ var initMap = function () {
 		titleControl = L.control({ position: 'topleft' });
 		titleControl.onAdd = function (map) {
 		    this._div = L.DomUtil.create('div', 'titleControl'); 
-		    this._div.innerHTML = "<h1>fracking-map</h1>This is work in progress. Please read <a href=\"https://github.com/giacecco/fracking-map\">here</a>.";
+		    this._div.innerHTML = "<h1>fracking-map</h1>This is work in progress. Please read <a href=\"https://github.com/giacecco/fracking-map\">here</a> for more information.";
 		    return this._div;
 		};
 		titleControl.addTo(map);
