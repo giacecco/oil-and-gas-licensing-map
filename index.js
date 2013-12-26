@@ -21,7 +21,8 @@ var configuration,
 	map,
 	layersControl,
 	infoControl,
-	titleControl;
+	titleControl, 
+	zoomControl;
 
 var onEachFeature = function (feature, layer) {
 
@@ -136,6 +137,7 @@ var initMap = function () {
 			// layers: [ osm, layers["Existing licences"] ],	
 			center: new L.LatLng(55.0, -3.0),	
 			zoom: 6,
+			zoomControl: false,
 		});
 
 		// set up the 'layers control'
@@ -174,6 +176,9 @@ var initMap = function () {
 		    return this._div;
 		};
 		titleControl.addTo(map);
+
+		// explicitly adding the zoom control so that it is below the titleControl
+		zoomControl = L.control.zoom().addTo(map);
 
 	});
 }
