@@ -5,7 +5,7 @@ fracking-map
 
 ## Summary
 
-The UK Department for Energy and Climate Change (DECC) published in December 2013 the "Environmental report for further onshore oil and gas licensing" report, available [here](https://www.gov.uk/government/consultations/environmental-report-for-further-onshore-oil-and-gas-licensing) and mirrored in this GitHub repository [here](https://github.com/giacecco/fracking-map/tree/master/data/raw/DECC-report). The report included for the first time maps specifying what areas of the UK were being evaluated for exploitation, with shale gas being the main resource being targetted.
+The UK Department for Energy and Climate Change (DECC) published in December 2013 the "Environmental report for further onshore oil and gas licensing" report, available [here](https://www.gov.uk/government/consultations/environmental-report-for-further-onshore-oil-and-gas-licensing). The report included for the first time maps specifying what areas of the UK were being evaluated for exploitation, with shale gas being the main resource being targetted.
 
 The documents are in PDF format and the maps look like the one below:
 
