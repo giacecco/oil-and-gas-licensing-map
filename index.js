@@ -1,4 +1,17 @@
-var	CONFIGURATION = {
+var	/* I found an explaination of the acronyms used for the licence types in
+	   DECC's "The Unconventional Hydrocarbon Resources of Britain's Onshore 
+	   Basins" document, available at https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/66171/promote-uk-cbm.pdf
+	*/
+	LICENCE_TYPES = {
+		"al": "Appraisal (pre-1997)",
+		"dl": "Development (pre-1997)",
+		"ex": "Exploration (pre-1997)",
+		"exl": "Exploration (pre-1997)",
+		"ml": "Mining (pre-1997)",
+		"pedl": "Petroleum Exploration and Development",
+		"pl": "Production (pre-1997)",
+	},
+	CONFIGURATION = {
 		"layers": {
 			// the order is relevant! from the bottom to the top one
 			"Areas under consideration": {
@@ -73,6 +86,9 @@ var style = function (feature) {
 }
 
 var initMap = function () {
+
+	_.mixin(_.str.exports());
+
 	configuration = CONFIGURATION;
 	async.each(_.keys(configuration.layers), function (layerName, callback) {
 		switch (configuration.layers[layerName].dataType) {
@@ -156,13 +172,36 @@ var initMap = function () {
 		// method that we will use to update the control based on feature properties passed
 		infoControl.update = function (properties) {
 			if (properties) {
-			    this._div.innerHTML = 
-			    	'<h4>Licensing status</h4>' + 
-					_.map(properties, function (memo, propertyName) {
-						return "<b>" + propertyName + "</b><br />" + properties[propertyName];
-					}).join('<br />');
+		    	this._div.innerHTML = 
+		    		'<h4>Licensing info</h4>' + 
+		    		_.reduce(_.keys(properties).sort(), function (memo, propertyName) {
+	    				// TODO: there are several GeoJSON features' properties 
+	    				// in the DECC data that have null properties
+		    			if (properties[propertyName] != null) {
+		    				var label = _.capitalize(propertyName.toLowerCase());
+				    		switch (propertyName.toLowerCase()) {
+				    			case "round":
+				    				// just rename the label
+				    				label = "Licensing Round"; 
+									return memo + "<b>" + label + "</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />";
+									break
+				    			case "licence_ty":
+				    				// replace the value with the readable licence type
+									return memo + "<b>Licence Type</b><br />" + LICENCE_TYPES[properties["LICENCE_TY"].toLowerCase()] + "<br />";
+				    				break;
+				    			case "licencetype":
+				    				// do nothing, these are for internal use
+				    				return memo;
+				    				break;
+				    			default:
+									return memo + "<b>" + label + "</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />";
+				    		}
+				    	} else {
+				    		return memo;
+				    	}
+		    		}, "");
 		    } else {
-		    	this._div.innerHTML = '<h4>Licensing status</h4>Hover over the map' 
+		    	this._div.innerHTML = '<h4>Licensing info</h4>Hover over the map to select an area of interest' 
 		    }
 		};
 		infoControl.addTo(map);
