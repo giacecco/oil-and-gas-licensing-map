@@ -301,7 +301,7 @@
 .leaflet-control-layers-expanded {
 	padding: 6px 10px 6px 6px;
 	color: #333;
-	background: #fff;
+	background: rgba(255,255,255,.8);
 	}
 .leaflet-control-layers-selector {
 	margin-top: 2px;
