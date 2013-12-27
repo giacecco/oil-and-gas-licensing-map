@@ -3,13 +3,13 @@ var	/* I found an explaination of the acronyms used for the licence types in
 	   Basins" document, available at https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/66171/promote-uk-cbm.pdf
 	*/
 	LICENCE_TYPES = {
-		"al": "Appraisal (pre-1997)",
-		"dl": "Development (pre-1997)",
-		"ex": "Exploration (pre-1997)",
-		"exl": "Exploration (pre-1997)",
-		"ml": "Mining (pre-1997)",
-		"pedl": "Petroleum Exploration and Development",
-		"pl": "Production (pre-1997)",
+		"al": "Appraisal",
+		"dl": "Development",
+		"ex": "Exploration",
+		"exl": "Exploration",
+		"ml": "Mining",
+		"pedl": "Petroleum Exploration and Development (generic, post-1996)",
+		"pl": "Production",
 	},
 	CONFIGURATION = {
 		"layers": {
@@ -178,12 +178,10 @@ var initMap = function () {
 	    				// TODO: there are several GeoJSON features' properties 
 	    				// in the DECC data that have null properties
 		    			if (properties[propertyName] != null) {
-		    				var label = _.capitalize(propertyName.toLowerCase());
 				    		switch (propertyName.toLowerCase()) {
 				    			case "round":
 				    				// just rename the label
-				    				label = "Licensing Round"; 
-									return memo + "<b>" + label + "</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />";
+									return memo + "<b>Licensing Round No.</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />";
 									break
 				    			case "licence_ty":
 				    				// replace the value with the readable licence type
@@ -194,7 +192,7 @@ var initMap = function () {
 				    				return memo;
 				    				break;
 				    			default:
-									return memo + "<b>" + label + "</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />";
+									return memo + "<b>" + _.capitalize(propertyName.toLowerCase()) + "</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />";
 				    		}
 				    	} else {
 				    		return memo;
