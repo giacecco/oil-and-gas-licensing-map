@@ -1,11 +1,17 @@
 fracking-map
 ============
 
+<script src='https://certificates.theodi.org/datasets/1103/certificates/13228/badge.js'></script>
+
+![Open Data Institute certificate](https://certificates.theodi.org/datasets/1103/certificates/13228/badge.png)
+[Pilot Open Data Certificate (beta)](https://certificates.theodi.org/datasets/1103/certificates/13228), self-certified, GB (beta), awarded 28 Dec 2013
+
 ## Table of Contents
 
 - Summary
 - Sources and Data pre-processing
 - The map
+- Get the data
 - Status
 - Credits
 - Licence
@@ -20,15 +26,17 @@ I then decided to start a little investigation over the data published by the DE
 
 ![Example of map on the UKOGL website](https://raw.github.com/giacecco/fracking-map/master/images/map2.png)
 
+If that wasn't enough, the map is also broken at the moment of writing (28/12/2013, 10:50; the tile server returns server errors).
+
 ## Sources and Data pre-processing
 
 ### Sources
 
 All the data the map is based upon comes from two sources:
 
-- The areas subject to existing licences and the current (13th) round of licence offering comes from DECC's "Oil and gas: onshore maps and GIS shapefiles" webpage, available online at [https://www.gov.uk/oil-and-gas-onshore-maps-and-gis-shapefiles](https://www.gov.uk/oil-and-gas-onshore-maps-and-gis-shapefiles). I used the shapefiles names "13th round licences offered" and "Onshore licences". I presumed that the former is to be considered in addition to the latter, although you can easily observe that many areas actually overlap and it still is not clear to me how to interpret that.
+- The areas subject to existing licences and the current (13th) round of licence offering comes from DECC's "Oil and gas: onshore maps and GIS shapefiles" webpage, available online at [https://www.gov.uk/oil-and-gas-onshore-maps-and-gis-shapefiles](https://www.gov.uk/oil-and-gas-onshore-maps-and-gis-shapefiles). The files were downloaded on 24/12/2013. I used the shapefiles names "13th round licences offered" and "Onshore licences". I presumed that the former is to be considered in addition to the latter, although you can easily observe that many areas actually overlap and it still is not clear to me how to interpret that.
 
-- The areas that are under consideration for oil and gas exploitation are defined in "Figure NTS 1" and "Figure NTS 2" of the "Strategic Environmental Assessment for further onshore oil and gas licensing: environmental report" DECC document available online at [https://www.gov.uk/government/consultations/environmental-report-for-further-onshore-oil-and-gas-licensing](https://www.gov.uk/government/consultations/environmental-report-for-further-onshore-oil-and-gas-licensing). I could not find the information in machine-readable format and had to manually write down the information for each of the >1k squares highlighted on the map as such (the result CSV file can be seen [here](https://github.com/giacecco/fracking-map/blob/master/data/raw/areasUnderConsideration.csv)).
+- The areas that are under consideration for oil and gas exploitation are defined in "Figure NTS 1" and "Figure NTS 2" of the "Strategic Environmental Assessment for further onshore oil and gas licensing: environmental report" DECC document available online at [https://www.gov.uk/government/consultations/environmental-report-for-further-onshore-oil-and-gas-licensing](https://www.gov.uk/government/consultations/environmental-report-for-further-onshore-oil-and-gas-licensing). The document is dated "December 2013". I could not find the information in machine-readable format and had to manually write down the information for each of the >1k squares highlighted on the map as such (the result CSV file can be seen [here](https://github.com/giacecco/fracking-map/blob/master/data/raw/areasUnderConsideration.csv)).
 
 ![Example of map in the original PDF files](https://raw.github.com/giacecco/fracking-map/master/images/map1.png)
 
@@ -50,6 +58,14 @@ The definition of the areas under consideration is instead translated from CSV a
 ## The map
 
 The code for the interactive maps is available as a branch of this project called [gh-pages](https://github.com/giacecco/fracking-map/tree/gh-pages). The website is accessible at [http://www.digitalcontraptionsimaginarium.co.uk/fracking-map/](http://www.digitalcontraptionsimaginarium.co.uk/fracking-map/). 
+
+## Get the data
+
+Below is the set of raw and processed data files used by the map:
+
+- [areasUnderConsideration.csv](https://raw.github.com/giacecco/fracking-map/gh-pages/areasUnderConsideration.csv): the list of 10,000 x 10,000 squares defined by DECC to be under consideration for licensing
+- [existingLicences.json](https://raw.github.com/giacecco/fracking-map/gh-pages/existingLicences.json): the GeoJSON of the existing licences, as translated from DECC's original GIS shapefile
+- [dec2013Offering.json](https://raw.github.com/giacecco/fracking-map/gh-pages/dec2013Offering.json): the GeoJSON of the 13th round of licence offering, as translated from DECC's original GIS shapefile
 
 ## Status
 
