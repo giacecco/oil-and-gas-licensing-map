@@ -66,10 +66,15 @@ var onEachFeature = function (feature, layer) {
 	    map.fitBounds(e.target.getBounds());
 	}
 
+	var openLicenceDetail = function (e) {
+		window.open("https://www.og.decc.gov.uk/eng/fox/decc/PED300X/licence?LICENCE_TYPE=" + e.target.feature.properties["LICENCE_TY"] + "&LICENCE_NO="  + e.target.feature.properties["LICENCE"].match(/\d+/g), "_blank");
+	}
+
 	layer.on({
 		mouseover: highlightFeature,
 		mouseout: resetHighlight,
 		click: zoomToFeature,
+		dblclick: openLicenceDetail,
 	});
 
 }
@@ -146,7 +151,7 @@ var initMap = function () {
 		titleControl = L.control({ position: 'topleft' });
 		titleControl.onAdd = function (map) {
 		    this._div = L.DomUtil.create('div', 'titleControl'); 
-		    this._div.innerHTML = "<h1>fracking-map</h1>This is work in progress. Please read <a href=\"https://github.com/giacecco/fracking-map\">here</a> for more information.";
+		    this._div.innerHTML = "<h1>fracking-map</h1><p>This is a map of existing and potential future oil and gas onshore licences for petroleum exploration and production in the UK (not just shale gas), derived from data made available by the Department of Energy and Climate Change. Please read <a href=\"https://github.com/giacecco/fracking-map\">here</a> for more information.</p><p>Information is provided \"as is\", without warranty of any kind, express or implied. Don't buy your next house basing your decision on this map! :-)</p>";
 		    return this._div;
 		};
 		titleControl.addTo(map);
@@ -183,6 +188,9 @@ var initMap = function () {
 				    				// just rename the label
 									return memo + "<b>Licensing Round No.</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />";
 									break
+								case "licence":
+									return memo + "<b>Licence</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />(double-click to see the details on the DECC website)<br />";
+									break;
 				    			case "licence_ty":
 				    				// replace the value with the readable licence type
 									return memo + "<b>Licence Type</b><br />" + LICENCE_TYPES[properties["LICENCE_TY"].toLowerCase()] + "<br />";
