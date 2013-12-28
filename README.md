@@ -3,8 +3,6 @@ fracking-map
 
 ![Open Data Institute certificate badge](https://raw.github.com/giacecco/fracking-map/master/images/odiBadge.png) [Pilot Open Data Certificate (beta)](https://certificates.theodi.org/datasets/1103/certificates/13228), self-certified, GB (beta), awarded 28 Dec 2013
 
-![CC By licence badge](https://raw.github.com/giacecco/fracking-map/master/images/ccby.png) This work is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/).
-
 ## Table of Contents
 
 - [Summary](https://github.com/giacecco/fracking-map#summary)

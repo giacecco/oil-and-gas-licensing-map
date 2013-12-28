@@ -53,3 +53,7 @@ Work proceeds and at the end of the 27th I feel quite happy of the status of the
 
 ![Screenshot on 27th December](https://raw.github.com/giacecco/fracking-map/master/images/screenshot3.png)
 
+# 28 December 2013
+
+I revised the existing documentation and wrote new, got the data self-certified vs the ODI open data certificate standards and... I would say I got to a point. Will probably sleep on it for the rest of the weekend and promote it a little on Monday... not that the holiday season is particularly suitable to get people interested.
+ 
