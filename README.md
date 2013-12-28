@@ -1,10 +1,10 @@
 fracking-map
 ============
 
-![Open Data Institute certificate](https://certificates.theodi.org/datasets/1103/certificates/13228/badge.png)
-[Pilot Open Data Certificate (beta)](https://github.com/giacecco/fracking-map/tree/master/images/odiBadge.png), self-certified, GB (beta), awarded 28 Dec 2013
+![Open Data Institute certificate badge](https://github.com/giacecco/fracking-map/tree/master/images/odiBadge.png)
+[Pilot Open Data Certificate (beta)](https://certificates.theodi.org/datasets/1103/certificates/13228), self-certified, GB (beta), awarded 28 Dec 2013
 
-[CC BY](https://github.com/giacecco/fracking-map/tree/master/images/ccby.png) This work is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/).
+![CC By licence badge](https://github.com/giacecco/fracking-map/tree/master/images/ccby.png) This work is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/).
 
 ## Table of Contents
 
