@@ -47,3 +47,9 @@ Merry Christmas!
 
 Studying the shapefiles using QGIS I've realised that many of the '13th round of licence offering' matches pre-existing licensed areas. I need to decide what is the relevant information for my 'public'. Instinctively, when an area was already licensed and its licensing is being reviewed / re-offered, it is not really interesting to me, while I like seeing the newly added areas. With QGIS I can easily calculate the polygonal difference of one vs the others and create a new shapefile with that information. Is that really what is the most useful bit of information to show?
 
+# 26 - 27 December 2013
+
+Work proceeds and at the end of the 27th I feel quite happy of the status of the map. The info panel at the top right is readable (although I still need to understand some of the columns in the original data) and the looks are consistent. I could stop work here and just write all the documentation, and I could consider the project completed.
+
+![Screenshot on 27th December](https://raw.github.com/giacecco/fracking-map/master/images/screenshot3.png)
+
