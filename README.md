@@ -1,5 +1,5 @@
-fracking-map
-============
+oil-and-gas-licensing-map
+=========================
 
 [http://www.digitalcontraptionsimaginarium.co.uk/oil-and-gas-licensing-map/](http://www.digitalcontraptionsimaginarium.co.uk/oil-and-gas-licensing-map/)
 
