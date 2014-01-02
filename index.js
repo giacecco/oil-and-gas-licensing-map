@@ -151,7 +151,7 @@ var initMap = function () {
 		titleControl = L.control({ position: 'topleft' });
 		titleControl.onAdd = function (map) {
 		    this._div = L.DomUtil.create('div', 'titleControl'); 
-		    this._div.innerHTML = "<h1>fracking-map</h1><p>This is a map of existing and potential future oil and gas onshore licences for petroleum exploration and production in the UK (not just shale gas), derived from data made available by the Department of Energy and Climate Change. Please read <a href=\"https://github.com/giacecco/fracking-map\">here</a> for more information.</p><p>Information is provided \"as is\", without warranty of any kind, express or implied. Don't buy your next house basing your decision on this map! :-)</p>";
+		    this._div.innerHTML = "<h1>oil-and-gas-licensing-map</h1><p>This is a map of existing and potential future oil and gas onshore licences for petroleum exploration and production in the UK (not just shale gas), derived from data made available by the Department of Energy and Climate Change. Please read <a href=\"https://github.com/giacecco/oil-and-gas-licensing-map\">here</a> for more information.</p><p>Information is provided \"as is\", without warranty of any kind, express or implied. Don't buy your next house basing your decision on this map! :-)</p>";
 		    return this._div;
 		};
 		titleControl.addTo(map);
