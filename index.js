@@ -40,6 +40,18 @@ var configuration,
 	titleControl, 
 	zoomControl;
 
+var qs = (function(a) {
+    if (a == "") return {};
+    var b = {};
+    for (var i = 0; i < a.length; ++i)
+    {
+        var p=a[i].split('=');
+        if (p.length != 2) continue;
+        b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+    }
+    return b;
+})(window.location.search.substr(1).split('&'));
+
 var onEachFeature = function (feature, layer) {
 
 	var highlightFeature = function (e) {
@@ -53,13 +65,13 @@ var onEachFeature = function (feature, layer) {
 	    if (!L.Browser.ie && !L.Browser.opera) {
 	        layer.bringToFront();
 	    }
-	    infoControl.update(layer.feature.properties);
+		if (!qs.embed) infoControl.update(layer.feature.properties);
 	}
 
 	var resetHighlight = function (e) {
 		// TODO is there a better way of doing this?
 	    _.each(layers, function (layer) { layer.resetStyle(e.target) });
-	    infoControl.update();
+	    if (!qs.embed) infoControl.update();
 	}
 
 	var zoomToFeature = function (e) {
@@ -67,7 +79,11 @@ var onEachFeature = function (feature, layer) {
 	}
 
 	var openLicenceDetail = function (e) {
-		window.open("https://www.og.decc.gov.uk/eng/fox/decc/PED300X/licence?LICENCE_TYPE=" + e.target.feature.properties["LICENCE_TY"] + "&LICENCE_NO="  + e.target.feature.properties["LICENCE"].match(/\d+/g), "_blank");
+		if (!qs.embed) {
+			window.open("https://www.og.decc.gov.uk/eng/fox/decc/PED300X/licence?LICENCE_TYPE=" + e.target.feature.properties["LICENCE_TY"] + "&LICENCE_NO="  + e.target.feature.properties["LICENCE"].match(/\d+/g), "_blank");
+		} else {
+			window.open("http://www.digitalcontraptionsimaginarium.co.uk/oil-and-gas-licensing-map/", "_blank");
+		}
 	}
 
 	layer.on({
@@ -143,18 +159,20 @@ var initMap = function () {
 		map = new L.Map('map', {
 			layers: [ osm ].concat(_.values(layers)),	
 			// layers: [ osm, layers["Existing licences"] ],	
-			center: new L.LatLng(55.0, -3.0),	
-			zoom: 6,
+			center: new L.LatLng(parseFloat(qs.latitude) || 55.0, parseFloat(qs.longitude) || -3.0),	
+			zoom: parseInt(qs.zoom) || 6,
 			zoomControl: false,
 		});
 
-		titleControl = L.control({ position: 'topleft' });
-		titleControl.onAdd = function (map) {
-		    this._div = L.DomUtil.create('div', 'titleControl'); 
-		    this._div.innerHTML = "<h1>oil-and-gas-licensing-map</h1><p>This is a map of existing and potential future oil and gas onshore licences for petroleum exploration and production in the UK (not just shale gas), derived from data made available by the Department of Energy and Climate Change. Please read <a href=\"https://github.com/giacecco/oil-and-gas-licensing-map\">here</a> for more information.</p><p>Information is provided \"as is\", without warranty of any kind, express or implied. Don't buy your next house basing your decision on this map! :-)</p>";
-		    return this._div;
-		};
-		titleControl.addTo(map);
+		if (!qs.embed) {
+			titleControl = L.control({ position: 'topleft' });
+			titleControl.onAdd = function (map) {
+			    this._div = L.DomUtil.create('div', 'titleControl'); 
+			    this._div.innerHTML = "<h1>oil-and-gas-licensing-map</h1><p>This is a map of existing and potential future oil and gas onshore licences for petroleum exploration and production in the UK (not just shale gas), derived from data made available by the Department of Energy and Climate Change. Please read <a href=\"https://github.com/giacecco/oil-and-gas-licensing-map\">here</a> for more information.</p><p>Information is provided \"as is\", without warranty of any kind, express or implied. Don't buy your next house basing your decision on this map! :-)</p>";
+			    return this._div;
+			};
+			titleControl.addTo(map);
+		}
 
 		// set up the 'layers control'
 		// TODO make the looks of this control consistent with the others, first attempt failed
@@ -167,50 +185,53 @@ var initMap = function () {
 		layersControl.addTo(map);
 
 		// set up the 'info control'
-		infoControl = L.control();
-		infoControl.onAdd = function (map) {
-		    this._div = L.DomUtil.create('div', 'infoControl'); 
-		    this.update();
-		    return this._div;
-		};
+		if (!qs.embed) {
 
-		// method that we will use to update the control based on feature properties passed
-		infoControl.update = function (properties) {
-			if (properties) {
-		    	this._div.innerHTML = 
-		    		'<h4>Licensing info</h4>' + 
-		    		_.reduce(_.keys(properties).sort(), function (memo, propertyName) {
-	    				// TODO: there are several GeoJSON features' properties 
-	    				// in the DECC data that have null properties
-		    			if (properties[propertyName] != null) {
-				    		switch (propertyName.toLowerCase()) {
-				    			case "round":
-				    				// just rename the label
-									return memo + "<b>Licensing Round No.</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />";
-									break
-								case "licence":
-									return memo + "<b>Licence</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />(double-click to see the details on the DECC website)<br />";
-									break;
-				    			case "licence_ty":
-				    				// replace the value with the readable licence type
-									return memo + "<b>Licence Type</b><br />" + LICENCE_TYPES[properties["LICENCE_TY"].toLowerCase()] + "<br />";
-				    				break;
-				    			case "licencetype":
-				    				// do nothing, these are for internal use
-				    				return memo;
-				    				break;
-				    			default:
-									return memo + "<b>" + _.capitalize(propertyName.toLowerCase()) + "</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />";
-				    		}
-				    	} else {
-				    		return memo;
-				    	}
-		    		}, "");
-		    } else {
-		    	this._div.innerHTML = '<h4>Licensing info</h4>Hover over the map to select an area of interest' 
-		    }
-		};
-		infoControl.addTo(map);
+			infoControl = L.control();
+			infoControl.onAdd = function (map) {
+			    this._div = L.DomUtil.create('div', 'infoControl'); 
+			    this.update();
+			    return this._div;
+			};
+
+			// method that we will use to update the control based on feature properties passed
+			infoControl.update = function (properties) {
+				if (properties) {
+			    	this._div.innerHTML = 
+			    		'<h4>Licensing info</h4>' + 
+			    		_.reduce(_.keys(properties).sort(), function (memo, propertyName) {
+		    				// TODO: there are several GeoJSON features' properties 
+		    				// in the DECC data that have null properties
+			    			if (properties[propertyName] != null) {
+					    		switch (propertyName.toLowerCase()) {
+					    			case "round":
+					    				// just rename the label
+										return memo + "<b>Licensing Round No.</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />";
+										break
+									case "licence":
+										return memo + "<b>Licence</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />(double-click to see the details on the DECC website)<br />";
+										break;
+					    			case "licence_ty":
+					    				// replace the value with the readable licence type
+										return memo + "<b>Licence Type</b><br />" + LICENCE_TYPES[properties["LICENCE_TY"].toLowerCase()] + "<br />";
+					    				break;
+					    			case "licencetype":
+					    				// do nothing, these are for internal use
+					    				return memo;
+					    				break;
+					    			default:
+										return memo + "<b>" + _.capitalize(propertyName.toLowerCase()) + "</b><br />" + _.capitalize(properties[propertyName].toString().toLowerCase()) + "<br />";
+					    		}
+					    	} else {
+					    		return memo;
+					    	}
+			    		}, "");
+			    } else {
+			    	this._div.innerHTML = '<h4>Licensing info</h4>Hover over the map to select an area of interest' 
+			    }
+			};
+			infoControl.addTo(map);
+		}
 
 		// explicitly adding the zoom control so that it is below the titleControl
 		zoomControl = L.control.zoom().addTo(map);
