@@ -83,3 +83,5 @@ I truly hope DECC will welcome my initiative and perhaps make it its own. If the
 ![Creative Commons License](http://i.creativecommons.org/l/by/4.0/88x31.png "Creative Commons License") This work is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/).
 
 Northing/Easting to Latitude/Longitude conversion in JavaScript code is done using Chris Veness' JavaScript libraries available [here](http://www.movable-type.co.uk/scripts/latlong-gridref.html).
+
+All of DECC's data used by this project is licensed under the [Open Government License v2.0](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/). 
