@@ -88,6 +88,4 @@ Northing/Easting to Latitude/Longitude conversion in JavaScript code is done usi
 
 All of DECC's data used by this project is licensed under the [Open Government License v2.0](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/). 
 
-The data used for this project has achieved the Open Data Institute's Open Data Certificate ["Pilot level"](https://certificates.theodi.org/datasets/1164/certificates/13292) on 13 January 2014, which means extra effort went in to support and encourage feedback from people who use this open data.
-
-![ODI badge](https://raw.github.com/giacecco/oil-and-gas-licensing-map/master/images/odiBadge.png)
+![ODI badge](https://raw.github.com/giacecco/oil-and-gas-licensing-map/master/images/odiBadge.png) The data used for this project has achieved the Open Data Institute's Open Data Certificate ["Pilot level"](https://certificates.theodi.org/datasets/1164/certificates/13292) on 13 January 2014, which means extra effort went in to support and encourage feedback from people who use this open data.
