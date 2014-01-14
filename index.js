@@ -156,10 +156,15 @@ var initMap = function () {
 		});
 
 		// set up the map
+		var defaultLayersToDisplay = [ osm ];
+		if (qs.underConsideration != "hide") defaultLayersToDisplay = defaultLayersToDisplay.concat(layers["Areas under consideration"]);
+		if (qs.offering2013 != "hide") defaultLayersToDisplay = defaultLayersToDisplay.concat(layers["December 2013 offering"]);
+		if (qs.existing != "hide") defaultLayersToDisplay = defaultLayersToDisplay.concat(layers["Existing licences"]);
 		map = new L.Map('map', {
-			layers: [ osm ].concat(_.values(layers)),	
+			layers: defaultLayersToDisplay,	
+			// layers: [ osm ].concat(_.values(layers)),	
 			// layers: [ osm, layers["Existing licences"] ],	
-			center: new L.LatLng(parseFloat(qs.latitude) || 55.0, parseFloat(qs.longitude) || -3.0),	
+			center: new L.LatLng(parseFloat(qs.lat) || 55.0, parseFloat(qs.lon) || -3.0),	
 			zoom: parseInt(qs.zoom) || 6,
 			zoomControl: false,
 		});
