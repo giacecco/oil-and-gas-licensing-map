@@ -23,7 +23,9 @@ I then decided to start a little investigation over the data published by the DE
 
 ![Example of map on the UKOGL website](https://raw.github.com/giacecco/oil-and-gas-licensing-map/master/images/map2.png)
 
-If that wasn't enough, the map is also broken at the moment of writing (28/12/2013, 10:50; the tile server returns server errors).
+What about this map instead?
+
+![Example of my map](https://raw.github.com/giacecco/oil-and-gas-licensing-map/master/images/map3.png)
 
 ## Sources and Data pre-processing
 
