@@ -142,7 +142,7 @@ var initMap = function () {
 
 		// create the tile layer with correct attribution
 		var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-			osmAttrib='Map data © OpenStreetMap contributors',
+			osmAttrib='DECC <a target="_blank" href="https://www.gov.uk/oil-and-gas-onshore-maps-and-gis-shapefiles">oil and gas licensing data</a> is available under the <a target="_blank" href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/">Open Government Licence v2.0</a> | Map data © <a target="_blank" href="http://www.openstreetmap.org/about">OpenStreetMap</a> contributors',
 			osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
 
 		// set up the data layers
