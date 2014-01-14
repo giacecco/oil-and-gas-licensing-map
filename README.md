@@ -19,7 +19,7 @@ The UK Department for Energy and Climate Change (DECC) published in December 201
 
 This information is particularly valuable for the public as - despite the fact that the UK Government is keen to heavily exploit the shale gas resources in the upcoming years - the mainstream technology for extraction, hydraulic fracturing, more commonly known as 'fracking', is controversial. The technology is relatively young and often associated to the risk of domestic incidents, seismic activity and health issues for the populations living in the areas subject to the extraction work (e.g. read [here](http://www.bbc.co.uk/news/uk-14432401)).
 
-I then decided to start a little investigation over the data published by the DECC that made me realise how much valuable information is actually available but often not that accessible or easy to interpret. A great example is the map for the areas that are already licensed, that can be browsed interactively on the UK Onshore Geophysical Library (UKOGL) website at [http://maps.lynxinfo.co.uk/UKOGL_LIVEV2/DeccLicences.html](http://maps.lynxinfo.co.uk/UKOGL_LIVEV2/DeccLicences.html). Would you be able, though, to find an address in the map below, e.g. if you were looking to buy a house in the area?
+I decided to start a little investigation over the data published by the DECC that made me realise how much valuable information is actually available but often not that accessible or easy to interpret. A great example is the map for the areas that are already licensed, that can be browsed interactively on the UK Onshore Geophysical Library (UKOGL) website at [http://maps.lynxinfo.co.uk/UKOGL_LIVEV2/DeccLicences.html](http://maps.lynxinfo.co.uk/UKOGL_LIVEV2/DeccLicences.html). Would you be able to find an address in the map below, e.g. if you were looking to buy a house in the area?
 
 ![Example of map on the UKOGL website](https://raw.github.com/giacecco/oil-and-gas-licensing-map/master/images/map2.png)
 
@@ -89,4 +89,5 @@ Northing/Easting to Latitude/Longitude conversion in JavaScript code is done usi
 All of DECC's data used by this project is licensed under the [Open Government License v2.0](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/). 
 
 The data used for this project has achieved the Open Data Institute's Open Data Certificate ["Pilot level"](https://certificates.theodi.org/datasets/1164/certificates/13292) on 13 January 2014, which means extra effort went in to support and encourage feedback from people who use this open data.
+
 ![ODI badge](https://raw.github.com/giacecco/oil-and-gas-licensing-map/master/images/odiBadge.png)
