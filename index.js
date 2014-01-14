@@ -164,7 +164,7 @@ var initMap = function () {
 			layers: defaultLayersToDisplay,	
 			// layers: [ osm ].concat(_.values(layers)),	
 			// layers: [ osm, layers["Existing licences"] ],	
-			center: new L.LatLng(parseFloat(qs.lat) || 55.0, parseFloat(qs.lon) || -3.0),	
+			center: new L.LatLng(parseFloat(qs.lat) || 54.0, parseFloat(qs.lon) || 1.5),	
 			zoom: parseInt(qs.zoom) || 6,
 			zoomControl: false,
 		});
