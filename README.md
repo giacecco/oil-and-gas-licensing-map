@@ -50,7 +50,7 @@ The existing and 13th round of licence offering data are provided by DECC in GIS
     ogr2ogr -t_srs EPSG:4326 -f geoJSON existingLicences.json Licensed_Blocks_On_Dec_2013.shp
     ogr2ogr -t_srs EPSG:4326 -f geoJSON dec2013Offering.json 13Round_Licences_Offered.shp
 
-The Node.js (preprocess.js script)[https://github.com/giacecco/oil-and-gas-licensing-map/blob/master/scripts/preprocess.js] does all of the above automatically, from downloading to conversion. 
+The Node.js [preprocess.js script](https://github.com/giacecco/oil-and-gas-licensing-map/blob/master/scripts/preprocess.js) does all of the above automatically, from downloading to conversion. 
 
 The definition of the areas under consideration is instead translated from CSV and National Grid coordinates onto GeoJSON and latitude / longitude coordinates by the webpage itself.
 
