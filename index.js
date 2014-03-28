@@ -82,7 +82,7 @@ var onEachFeature = function (feature, layer) {
 		if (!qs.embed) {
 			window.open("https://www.og.decc.gov.uk/eng/fox/decc/PED300X/licence?LICENCE_TYPE=" + e.target.feature.properties["LICENCE_TY"] + "&LICENCE_NO="  + e.target.feature.properties["LICENCE"].match(/\d+/g), "_blank");
 		} else {
-			window.open("http://www.digitalcontraptionsimaginarium.co.uk/oil-and-gas-licensing-map/", "_blank");
+			window.open("https://github.com/Digital-Contraptions-Imaginarium/oil-and-gas-licensing-map", "_blank");
 		}
 	}
 
@@ -142,7 +142,7 @@ var initMap = function () {
 
 		// create the tile layer with correct attribution
 		var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-			osmAttrib='DECC <a target="_blank" href="https://www.gov.uk/oil-and-gas-onshore-maps-and-gis-shapefiles">oil and gas licensing data</a> is available under the <a target="_blank" href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/">Open Government Licence v2.0</a> | Map data &copy; <a target="_blank" href="http://www.openstreetmap.org/about">OpenStreetMap</a> contributors' + (!qs.embed ? "" : '| See the full website at <a target="_blank" href="http://www.digitalcontraptionsimaginarium.co.uk/oil-and-gas-licensing-map/">Digital Contraptions Imaginarium</a>'),
+			osmAttrib='DECC <a target="_blank" href="https://www.gov.uk/oil-and-gas-onshore-maps-and-gis-shapefiles">oil and gas licensing data</a> is available under the <a target="_blank" href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/">Open Government Licence v2.0</a> | Map data &copy; <a target="_blank" href="http://www.openstreetmap.org/about">OpenStreetMap</a> contributors' + (!qs.embed ? "" : '| See the full website at <a target="_blank" href="http://dico.im/oil-and-gas-licensing-map/">Digital Contraptions Imaginarium</a>'),
 			osm = new L.TileLayer(osmUrl, { minZoom: 1, maxZoom: 12, attribution: osmAttrib });		
 
 		// set up the data layers
@@ -173,7 +173,7 @@ var initMap = function () {
 			titleControl = L.control({ position: 'topleft' });
 			titleControl.onAdd = function (map) {
 			    this._div = L.DomUtil.create('div', 'titleControl'); 
-			    this._div.innerHTML = "<h1>oil-and-gas-licensing-map</h1><p>This is a map of existing and potential future oil and gas onshore licences for petroleum exploration and production in the UK (not just shale gas), derived from data made available by the Department of Energy and Climate Change. Please read <a href=\"https://github.com/giacecco/oil-and-gas-licensing-map\">here</a> for more information.</p><p>Information is provided \"as is\", without warranty of any kind, express or implied. Don't buy your next house basing your decision on this map! :-)</p>";
+			    this._div.innerHTML = "<h1>oil-and-gas-licensing-map</h1><p>This is a map of existing and potential future oil and gas onshore licences for petroleum exploration and production in the UK (not just shale gas), derived from data made available by the Department of Energy and Climate Change. Please read <a href=\"https://github.com/Digital-Contraptions-Imaginarium/oil-and-gas-licensing-map\">here</a> for more information.</p><p>Information is provided \"as is\", without warranty of any kind, express or implied. Don't buy your next house basing your decision on this map! :-)</p>";
 			    return this._div;
 			};
 			titleControl.addTo(map);
